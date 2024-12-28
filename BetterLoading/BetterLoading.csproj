@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<LangVersion>13.0</LangVersion>
+		<Nullable>enable</Nullable>
+
+		<OutDir>C:\SteamCMD\steamapps\common\U3DS\Modules\Better Loading</OutDir>
+	</PropertyGroup>
+
+	<!-- Base U3DS installation -->
+	<PropertyGroup>
+		<ServerPath>C:\SteamCMD\steamapps\common\U3DS</ServerPath>
+	</PropertyGroup>
+
+	<!-- Unturned Files -->
+	<Choose>
+		<When Condition="exists('$(ServerPath)/Unturned_Data/Managed/Assembly-CSharp.dll')">
+			<PropertyGroup>
+				<UnturnedDllPath>$(ServerPath)/Unturned_Data/Managed</UnturnedDllPath>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<UnturnedDllPath>../Libraries</UnturnedDllPath>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<ItemGroup>
+		<PackageReference Include="DanielWillett.ReflectionTools" Version="4.*" />
+		<PackageReference Include="DanielWillett.ReflectionTools.Harmony" Version="4.*" />
+		<PackageReference Include="Lib.Harmony.Ref" Version="2.3.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Unturned -->
+		<Reference Include="Assembly-CSharp">
+			<HintPath>$(UnturnedDllPath)/Assembly-CSharp.dll</HintPath>
+
+			<!-- Prevents copying to output dir -->
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="UnturnedDat">
+			<HintPath>$(UnturnedDllPath)/UnturnedDat.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="UnityEx">
+			<HintPath>$(UnturnedDllPath)/UnityEx.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<!-- Third Party -->
+		<Reference Include="com.rlabrecque.steamworks.net">
+			<HintPath>$(UnturnedDllPath)/com.rlabrecque.steamworks.net.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<!-- Unity -->
+		<Reference Include="UnityEngine">
+			<HintPath>$(UnturnedDllPath)/UnityEngine.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule">
+			<HintPath>$(UnturnedDllPath)/UnityEngine.CoreModule.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="UnityEngine.UnityWebRequestModule">
+			<HintPath>$(UnturnedDllPath)/UnityEngine.UnityWebRequestModule.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="UnityEngine.AssetBundleModule">
+			<HintPath>$(UnturnedDllPath)/UnityEngine.AssetBundleModule.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
+
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="exists('$(ServerPath)/Unturned_Data/Managed/Assembly-CSharp.dll')">
+		<Exec Command="&#xD;&#xA;			XCOPY /v /y &quot;$([System.IO.Path]::Combine($(UnturnedDllPath),Assembly-CSharp.dll))*&quot; &quot;$([System.IO.Path]::Combine(../Libraries,Assembly-CSharp.dll))*&quot;&#xD;&#xA;&#xD;&#xA;			XCOPY /v /y &quot;$([System.IO.Path]::Combine($(UnturnedDllPath),UnturnedDat.dll))*&quot; &quot;$([System.IO.Path]::Combine(../Libraries,UnturnedDat.dll))*&quot;&#xD;&#xA;&#xD;&#xA;			XCOPY /v /y &quot;$([System.IO.Path]::Combine($(UnturnedDllPath),UnityEx.dll))*&quot; &quot;$([System.IO.Path]::Combine(../Libraries,UnityEx.dll))*&quot;&#xD;&#xA;&#xD;&#xA;			XCOPY /v /y &quot;$([System.IO.Path]::Combine($(UnturnedDllPath),com.rlabrecque.steamworks.net.dll))*&quot; &quot;$([System.IO.Path]::Combine(../Libraries,com.rlabrecque.steamworks.net.dll))*&quot;&#xD;&#xA;&#xD;&#xA;			XCOPY /v /y &quot;$([System.IO.Path]::Combine($(UnturnedDllPath),UnityEngine.CoreModule.dll))*&quot; &quot;$([System.IO.Path]::Combine(../Libraries,UnityEngine.CoreModule.dll))*&quot;&#xD;&#xA;&#xD;&#xA;			XCOPY /v /y &quot;$([System.IO.Path]::Combine($(UnturnedDllPath),UnityEngine.dll))*&quot; &quot;$([System.IO.Path]::Combine(../Libraries,UnityEngine.dll))*&quot;&#xD;&#xA;&#xD;&#xA;			XCOPY /v /y &quot;$([System.IO.Path]::Combine($(UnturnedDllPath),UnityEngine.UnityWebRequestModule.dll))*&quot; &quot;$([System.IO.Path]::Combine(../Libraries,UnityEngine.UnityWebRequestModule.dll))*&quot;&#xD;&#xA;&#xD;&#xA;			XCOPY /v /y &quot;$([System.IO.Path]::Combine($(UnturnedDllPath),UnityEngine.AssetBundleModule.dll))*&quot; &quot;$([System.IO.Path]::Combine(../Libraries,UnityEngine.AssetBundleModule.dll))*&quot;" />
+	</Target>
+
+</Project>
