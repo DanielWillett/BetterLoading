@@ -26,8 +26,8 @@ Example file:
 # Whitelist of assets to load
 # Text after a '#' is considered as a comment.
 
-92b49222958d4c6fbeca1bd00987b0fd	# Ace
-Item 4								# Eaglefire
+92b49222958d4c6fbeca1bd00987b0fd    # Ace
+Item 4                              # Eaglefire
 ```
 
 Asset type can be any of the following (case insensitive):

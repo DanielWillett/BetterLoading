@@ -16,6 +16,41 @@ namespace BetterLoading;
 [HarmonyPatch]
 internal static class Patches
 {
+    [HarmonyPatch(typeof(Asset), "OriginAllowsVanillaLegacyId", MethodType.Getter)]
+    [HarmonyPostfix]
+    [UsedImplicitly]
+    [SuppressMessage("CodeQuality", "IDE0051")]
+    private static void OriginAllowsVanillaLegacyId(Asset __instance, ref bool __result)
+    {
+        if (!__result && ReferenceEquals(__instance.GetOriginName(), BetterLoadingModule.OriginName))
+            __result = true;
+    }
+
+    [HarmonyPatch(typeof(AssetReference<Asset>), "Find")]
+    [HarmonyPrefix]
+    [UsedImplicitly]
+    [SuppressMessage("CodeQuality", "IDE0051")]
+    private static bool FindAsset(AssetReference<Asset> __instance, ref Asset? __result)
+    {
+        if (!__instance.isValid)
+        {
+            return false;
+        }
+
+        Guid guid = __instance.GUID;
+
+        if (Assets.find(guid) is { } asset || BetterLoadingModule.Instance.TryLoadLateAsset(guid, out asset))
+        {
+            __result = asset;
+        }
+        else
+        {
+            __result = null;
+        }
+
+        return false;
+    }
+
     [HarmonyPatch(typeof(SpawnTableTool), "Resolve", typeof(Guid), typeof(EAssetType), typeof(Func<string>))]
     [HarmonyTranspiler]
     [UsedImplicitly]
